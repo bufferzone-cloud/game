@@ -1,0 +1,903 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Buffer Zone Bonus Game</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      font-family: 'Poppins', sans-serif;
+      background-color: #ffffff;
+      color: #333;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 15px;
+      background: linear-gradient(135deg, #f5f7fa 0%, #e4e8f0 100%);
+    }
+
+    .container {
+      text-align: center;
+      width: 100%;
+      max-width: 360px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 20px rgba(106, 13, 173, 0.15);
+      padding: 15px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .header {
+      margin-bottom: 15px;
+      position: relative;
+    }
+
+    .logo-container {
+      width: 70px;
+      height: 70px;
+      margin: 0 auto 10px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: linear-gradient(135deg, #6a0dad, #8a2be2);
+      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
+      padding: 3px;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      border-radius: 50%;
+      background: white;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .logo img {
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+    }
+
+    h1 {
+      font-size: 1.4rem;
+      color: #6a0dad;
+      margin-bottom: 5px;
+      font-weight: 700;
+    }
+
+    .subtitle {
+      color: #8a2be2;
+      font-size: 0.85rem;
+      margin-bottom: 10px;
+    }
+
+    .intro-text {
+      color: #555;
+      font-size: 0.8rem;
+      margin-bottom: 15px;
+      line-height: 1.4;
+    }
+
+    .prize-highlight {
+      background: linear-gradient(135deg, #6a0dad, #8a2be2);
+      color: white;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-weight: 600;
+      box-shadow: 0 3px 8px rgba(106, 13, 173, 0.2);
+      font-size: 0.8rem;
+    }
+
+    .attempts-display {
+      background: #f8f9fa;
+      color: #6a0dad;
+      padding: 8px 12px;
+      border-radius: 8px;
+      margin: 10px 0;
+      font-weight: 600;
+      border: 2px solid #e9ecef;
+      font-size: 0.8rem;
+    }
+
+    #gameBoard {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+      margin-bottom: 15px;
+    }
+
+    .card {
+      background: #f8f9fa;
+      border-radius: 10px;
+      height: 65px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+      position: relative;
+      perspective: 1000px;
+      box-shadow: 0 3px 6px rgba(106, 13, 173, 0.1);
+      transition: transform 0.3s, box-shadow 0.3s;
+      border: 2px solid #e9ecef;
+    }
+
+    .card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 10px rgba(106, 13, 173, 0.15);
+    }
+
+    .card.flip .front {
+      transform: rotateY(180deg);
+    }
+
+    .card.flip .back {
+      transform: rotateY(0deg);
+    }
+
+    .front, .back {
+      width: 100%;
+      height: 100%;
+      border-radius: 8px;
+      position: absolute;
+      top: 0;
+      left: 0;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      transition: transform 0.6s;
+    }
+
+    .front {
+      background: white;
+      color: #fff;
+      overflow: hidden;
+    }
+
+    .front img {
+      width: 40px;
+      height: 40px;
+      object-fit: contain;
+    }
+
+    .back {
+      background: linear-gradient(135deg, #6a0dad, #8a2be2);
+      transform: rotateY(180deg);
+      color: white;
+      font-weight: bold;
+      font-size: 1rem;
+      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+      flex-direction: column;
+      padding: 3px;
+    }
+
+    .back img {
+      width: 30px;
+      height: 30px;
+      margin-bottom: 3px;
+    }
+
+    #pickedWell {
+      display: flex;
+      justify-content: center;
+      gap: 12px;
+      margin: 15px 0;
+    }
+
+    .picked {
+      background: #f8f9fa;
+      color: #6a0dad;
+      border-radius: 10px;
+      padding: 12px 15px;
+      font-size: 0.9rem;
+      font-weight: bold;
+      min-width: 55px;
+      text-align: center;
+      box-shadow: 0 3px 8px rgba(106, 13, 173, 0.1);
+      transition: all 0.3s;
+      border: 2px solid #e9ecef;
+    }
+
+    .picked.revealed {
+      transform: scale(1.1);
+      background: #6a0dad;
+      color: white;
+      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.3);
+    }
+
+    #message {
+      margin: 12px 0;
+      font-size: 0.9rem;
+      min-height: 25px;
+      font-weight: 600;
+      color: #6a0dad;
+    }
+
+    #timer {
+      margin: 8px 0;
+      font-size: 0.85rem;
+      color: #8a2be2;
+      font-weight: bold;
+      background: #f8f9fa;
+      padding: 6px 12px;
+      border-radius: 16px;
+      display: inline-block;
+    }
+
+    #whatsappBtn {
+      display: none;
+      background: #25D366;
+      border: none;
+      padding: 12px 20px;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s;
+      box-shadow: 0 3px 10px rgba(37, 211, 102, 0.3);
+      width: 100%;
+      margin-top: 12px;
+    }
+
+    #whatsappBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 12px rgba(37, 211, 102, 0.4);
+    }
+
+    #whatsappBtn.show {
+      display: inline-block;
+    }
+
+    /* Modal Styles */
+    .modal {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.7);
+      z-index: 1000;
+      justify-content: center;
+      align-items: center;
+      padding: 15px;
+    }
+
+    .modal-content {
+      background: #ffffff;
+      padding: 20px;
+      border-radius: 16px;
+      width: 100%;
+      max-width: 320px;
+      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+      text-align: center;
+    }
+
+    .modal h2 {
+      margin-top: 0;
+      color: #6a0dad;
+      margin-bottom: 12px;
+      font-size: 1.3rem;
+    }
+
+    .form-group {
+      margin-bottom: 15px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      margin-bottom: 6px;
+      font-weight: 600;
+      color: #6a0dad;
+      font-size: 0.85rem;
+    }
+
+    .form-group input {
+      width: 100%;
+      padding: 10px 12px;
+      border-radius: 8px;
+      border: 2px solid #e9ecef;
+      box-sizing: border-box;
+      font-size: 0.9rem;
+      transition: border-color 0.3s;
+    }
+
+    .form-group input:focus {
+      outline: none;
+      border-color: #6a0dad;
+    }
+
+    .submit-btn {
+      background: linear-gradient(135deg, #6a0dad, #8a2be2);
+      border: none;
+      padding: 12px 18px;
+      color: #fff;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      font-weight: 600;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 8px;
+      transition: all 0.3s;
+      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
+    }
+
+    .submit-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.4);
+    }
+
+    /* Wheel Section */
+    .wheel-container {
+      margin-top: 20px;
+      text-align: center;
+      display: none;
+    }
+
+    .wheel-title {
+      color: #6a0dad;
+      margin-bottom: 12px;
+      font-size: 1.2rem;
+    }
+
+    .wheel-wrapper {
+      position: relative;
+      width: 200px;
+      height: 200px;
+      margin: 0 auto 15px;
+    }
+
+    .wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      overflow: hidden;
+      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+      box-shadow: 0 0 15px rgba(106, 13, 173, 0.2);
+      border: 6px solid #6a0dad;
+      background: linear-gradient(135deg, #6a0dad, #8a2be2);
+    }
+
+    .wheel-logo {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px;
+      height: 120px;
+      z-index: 10;
+      transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
+    }
+
+    .wheel-logo img {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      border: 4px solid white;
+      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+    }
+
+    .wheel-pointer {
+      position: absolute;
+      top: -15px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 30px;
+      height: 30px;
+      z-index: 10;
+      filter: drop-shadow(0 0 4px rgba(0,0,0,0.3));
+    }
+
+    #spinBtn {
+      margin-top: 8px;
+      background: linear-gradient(135deg, #6a0dad, #8a2be2);
+      border: none;
+      padding: 12px 20px;
+      font-size: 0.9rem;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
+      transition: all 0.3s;
+      font-weight: 600;
+    }
+
+    #spinBtn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.4);
+    }
+
+    #spinBtn:disabled {
+      background: #adb5bd;
+      cursor: not-allowed;
+      transform: none;
+      box-shadow: none;
+    }
+
+    .confetti {
+      position: fixed;
+      width: 8px;
+      height: 8px;
+      background-color: #6a0dad;
+      opacity: 0;
+      z-index: 1000;
+      pointer-events: none;
+    }
+
+    .start-btn {
+      background: linear-gradient(135deg, #6a0dad, #8a2be2);
+      border: none;
+      padding: 14px 25px;
+      font-size: 1rem;
+      color: #fff;
+      border-radius: 10px;
+      cursor: pointer;
+      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
+      transition: all 0.3s;
+      font-weight: 600;
+      margin-top: 15px;
+      width: 100%;
+    }
+
+    .start-btn:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.4);
+    }
+
+    .daily-limit {
+      background: #ff6b6b;
+      color: white;
+      padding: 12px;
+      border-radius: 10px;
+      margin: 15px 0;
+      font-weight: 600;
+      box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+    }
+
+    .play-count {
+      font-size: 0.8rem;
+      color: #6a0dad;
+      margin: 10px 0;
+      font-weight: 600;
+    }
+
+    @media (max-width: 480px) {
+      .container {
+        padding: 12px;
+      }
+      
+      h1 {
+        font-size: 1.3rem;
+      }
+      
+      .card {
+        height: 60px;
+      }
+      
+      .wheel-wrapper {
+        width: 180px;
+        height: 180px;
+      }
+      
+      .wheel-logo {
+        width: 100px;
+        height: 100px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header">
+      <div class="logo-container">
+        <div class="logo">
+          <!-- Replace with your BZ.png image -->
+          <img src="BZ.png" alt="Buffer Zone Logo">
+        </div>
+      </div>
+      <h1>Buffer Zone Bonus Game</h1>
+      <p class="subtitle">Match & Win Exciting Prizes!</p>
+      
+      <div id="homeScreen">
+        <p class="intro-text">Welcome to the Buffer Zone bonus game! You have 3 attempts to match cards. Each attempt gives you 20 seconds to find a matching pair!</p>
+        
+        <div class="prize-highlight">
+          🎁 Match BZ Logos to unlock the Bonus Wheel!
+        </div>
+        
+        <div class="prize-highlight">
+          ⚡ 3 attempts per day - make them count!
+        </div>
+        
+        <div class="attempts-display" id="attemptsDisplay">Attempts remaining today: 3/3</div>
+        
+        <button class="start-btn" id="startBtn">Start First Attempt</button>
+      </div>
+    </div>
+    
+    <!-- Memory Game -->
+    <div id="gameScreen" style="display: none;">
+      <div class="attempts-display" id="currentAttempt">Attempt: 1/3</div>
+      <div id="gameBoard"></div>
+      <div id="pickedWell">
+        <div id="pick1" class="picked">?</div>
+        <div id="pick2" class="picked">?</div>
+      </div>
+      <p id="timer">⏳ 20s to pick cards</p>
+      <p id="message"></p>
+      <button id="whatsappBtn">Submit Your Win</button>
+
+      <!-- Bonus Wheel -->
+      <div class="wheel-container" id="wheelContainer">
+        <h2 class="wheel-title">🎡 Bonus Wheel!</h2>
+        <div class="wheel-wrapper">
+          <svg class="wheel-pointer" viewBox="0 0 100 100">
+            <polygon points="50,15 65,100 35,100" fill="#6a0dad"/>
+          </svg>
+          <div class="wheel" id="wheel">
+            <div class="wheel-logo" id="wheelLogo">
+              <img src="BZ.png" alt="Buffer Zone Logo">
+            </div>
+          </div>
+        </div>
+        <button id="spinBtn">Spin for Extra Prize</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Winner Form Modal -->
+  <div class="modal" id="winnerModal">
+    <div class="modal-content">
+      <h2>🎉 Congratulations! 🎉</h2>
+      <p>You've won K<span id="prizeAmount">0</span>!</p>
+      <p>Please provide your details to claim your prize:</p>
+      <form id="winnerForm">
+        <div class="form-group">
+          <label for="winnerName">Full Name:</label>
+          <input type="text" id="winnerName" required>
+        </div>
+        <div class="form-group">
+          <label for="winnerPhone">Phone Number:</label>
+          <input type="tel" id="winnerPhone" required>
+        </div>
+        <button type="submit" class="submit-btn">Submit & Claim Prize</button>
+      </form>
+    </div>
+  </div>
+
+  <script>
+    const gameBoard = document.getElementById('gameBoard');
+    const message = document.getElementById('message');
+    const whatsappBtn = document.getElementById('whatsappBtn');
+    const pick1 = document.getElementById('pick1');
+    const pick2 = document.getElementById('pick2');
+    const timerEl = document.getElementById('timer');
+    const wheelContainer = document.getElementById('wheelContainer');
+    const winnerModal = document.getElementById('winnerModal');
+    const winnerForm = document.getElementById('winnerForm');
+    const prizeAmountEl = document.getElementById('prizeAmount');
+    const spinBtn = document.getElementById('spinBtn');
+    const startBtn = document.getElementById('startBtn');
+    const homeScreen = document.getElementById('homeScreen');
+    const gameScreen = document.getElementById('gameScreen');
+    const attemptsDisplay = document.getElementById('attemptsDisplay');
+    const currentAttempt = document.getElementById('currentAttempt');
+    const wheelLogo = document.getElementById('wheelLogo');
+
+    const phoneNumber = "+260768658484";
+
+    // Base64 encoded black BZ logo on white background
+    const bzLogo = "BZ.png";
+
+    // Card values
+    let cards = [
+      {value: 'BZ', display: '50', isLogo: true},
+      {value: 'BZ', display: '50', isLogo: true},
+      {value: '35', display: '35'},
+      {value: '35', display: '35'},
+      {value: '30', display: '30'},
+      {value: '30', display: '30'},
+      {value: '20', display: '20'},
+      {value: '20', display: '20'},
+      {value: '10', display: '10'},
+      {value: '10', display: '10'},
+      {value: '2', display: '2'},
+      {value: '2', display: '2'},
+    ];
+
+    let flipped = [];
+    let totalPrize = 0;
+    let timer = 20;
+    let countdown;
+    let hasSpun = false;
+    let attemptsRemaining = 3;
+    let currentAttemptNumber = 1;
+    let hasPlayedToday = false;
+
+    // Wheel segments with hidden values
+    const wheelSegments = [0, 5, 10, 15];
+
+    // Initialize play tracking from localStorage
+    function initializePlayTracking() {
+      const today = new Date().toDateString();
+      const storedData = localStorage.getItem('bufferZoneGameData');
+      
+      if (storedData) {
+        const data = JSON.parse(storedData);
+        // Check if data exists and is from today
+        if (data && data.lastPlayDate === today) {
+          attemptsRemaining = data.attemptsRemaining !== undefined ? data.attemptsRemaining : 3;
+        } else {
+          // Reset if it's a new day or data is invalid
+          attemptsRemaining = 3;
+        }
+      } else {
+        // No stored data, start with 3 attempts
+        attemptsRemaining = 3;
+      }
+      
+      updateAttemptsDisplay();
+      checkAttemptsLimit();
+    }
+
+    function savePlayData() {
+      const data = {
+        attemptsRemaining: attemptsRemaining,
+        lastPlayDate: new Date().toDateString()
+      };
+      localStorage.setItem('bufferZoneGameData', JSON.stringify(data));
+    }
+
+    function updateAttemptsDisplay() {
+      attemptsDisplay.textContent = `Attempts remaining today: ${attemptsRemaining}/3`;
+      if (attemptsRemaining === 0) {
+        attemptsDisplay.style.background = "#ff6b6b";
+        attemptsDisplay.style.color = "white";
+      } else {
+        attemptsDisplay.style.background = "#f8f9fa";
+        attemptsDisplay.style.color = "#6a0dad";
+      }
+    }
+
+    function checkAttemptsLimit() {
+      if (attemptsRemaining <= 0) {
+        startBtn.disabled = true;
+        startBtn.textContent = "Try Again Tomorrow";
+        startBtn.style.background = "#adb5bd";
+        startBtn.style.cursor = "not-allowed";
+        
+        const dailyLimitMsg = document.createElement('div');
+        dailyLimitMsg.className = 'daily-limit';
+        dailyLimitMsg.textContent = "You've used all your attempts today. Please come back tomorrow!";
+        homeScreen.appendChild(dailyLimitMsg);
+      }
+    }
+
+    function useAttempt() {
+      if (attemptsRemaining > 0) {
+        attemptsRemaining--;
+        savePlayData();
+        updateAttemptsDisplay();
+        
+        if (attemptsRemaining <= 0) {
+          checkAttemptsLimit();
+        }
+      }
+    }
+
+    // Start game button
+    startBtn.addEventListener('click', function() {
+      if (attemptsRemaining <= 0) {
+        message.textContent = "No attempts remaining. Try again tomorrow!";
+        return;
+      }
+      
+      currentAttemptNumber = 4 - attemptsRemaining; // Calculate current attempt number
+      homeScreen.style.display = 'none';
+      gameScreen.style.display = 'block';
+      currentAttempt.textContent = `Attempt: ${currentAttemptNumber}/3`;
+      renderBoard();
+      startTimer();
+    });
+
+    function shuffle(array) {
+      return array.sort(() => 0.5 - Math.random());
+    }
+
+    function renderBoard() {
+      gameBoard.innerHTML = '';
+      shuffle(cards).forEach((card) => {
+        const cardEl = document.createElement('div');
+        cardEl.classList.add('card');
+        cardEl.dataset.value = card.value;
+        
+        let frontContent = `<img src="${bzLogo}" alt="Buffer Zone Logo">`;
+        let backContent = card.isLogo 
+          ? `<img src="${bzLogo}" alt="BZ Logo"><div>50</div>` 
+          : card.display;
+          
+        cardEl.innerHTML = `
+          <div class="front">${frontContent}</div>
+          <div class="back">${backContent}</div>
+        `;
+        cardEl.addEventListener('click', () => flipCard(cardEl, card.display));
+        gameBoard.appendChild(cardEl);
+      });
+    }
+
+    function flipCard(cardEl, displayText) {
+      if (cardEl.classList.contains('flip') || flipped.length === 2) return;
+      
+      cardEl.classList.add('flip');
+      flipped.push(cardEl);
+
+      if (flipped.length === 1) {
+        pick1.textContent = displayText;
+        pick1.classList.add('revealed');
+      } else if (flipped.length === 2) {
+        pick2.textContent = displayText;
+        pick2.classList.add('revealed');
+        setTimeout(checkMatch, 800);
+      }
+    }
+
+    function checkMatch() {
+      let [c1, c2] = flipped;
+      if (c1.dataset.value === c2.dataset.value) {
+        totalPrize = (c1.dataset.value === 'BZ') ? 50 : parseInt(c1.dataset.value);
+        message.textContent = `🎉 Congrats! You won K${totalPrize}`;
+        createConfetti();
+        clearInterval(countdown);
+        timerEl.textContent = "";
+        wheelContainer.style.display = "block";
+        // Don't use attempt if they succeeded
+        attemptsRemaining++; // Give back the attempt since they succeeded
+        savePlayData();
+        updateAttemptsDisplay();
+      } else {
+        message.textContent = "❌ No match!";
+        setTimeout(() => {
+          pick1.classList.remove('revealed');
+          pick2.classList.remove('revealed');
+          c1.classList.remove('flip');
+          c2.classList.remove('flip');
+          flipped = [];
+        }, 1000);
+      }
+    }
+
+    function startTimer() {
+      timer = 20;
+      timerEl.textContent = `⏳ 20s to pick cards`;
+      countdown = setInterval(() => {
+        timer--;
+        timerEl.textContent = `⏳ ${timer}s left to pick cards`;
+        if (timer <= 0) {
+          endAttempt();
+        }
+      }, 1000);
+    }
+
+    function endAttempt() {
+      clearInterval(countdown);
+      message.textContent = "⏰ Time's up! Attempt over.";
+      useAttempt();
+      
+      setTimeout(() => {
+        if (attemptsRemaining > 0) {
+          // Reset for next attempt
+          homeScreen.style.display = 'block';
+          gameScreen.style.display = 'none';
+          startBtn.textContent = `Start Attempt ${4 - attemptsRemaining}`;
+          message.textContent = `Attempt ${currentAttemptNumber} failed. Try again!`;
+        } else {
+          // No more attempts
+          homeScreen.style.display = 'block';
+          gameScreen.style.display = 'none';
+          checkAttemptsLimit();
+        }
+      }, 2000);
+    }
+
+    function createConfetti() {
+      const colors = ['#6a0dad', '#8a2be2', '#9370db', '#ba55d3', '#da70d6', '#d8bfd8'];
+      for (let i = 0; i < 80; i++) {
+        const confetti = document.createElement('div');
+        confetti.classList.add('confetti');
+        confetti.style.left = Math.random() * 100 + 'vw';
+        confetti.style.top = '-10px';
+        confetti.style.backgroundColor = colors[Math.floor(Math.random() * colors.length)];
+        confetti.style.transform = `rotate(${Math.random() * 360}deg)`;
+        document.body.appendChild(confetti);
+        
+        const animation = confetti.animate([
+          { top: '-10px', opacity: 1, transform: `rotate(0deg) scale(1)` },
+          { top: '100vh', opacity: 0, transform: `rotate(${Math.random() * 360}deg) scale(0.5)` }
+        ], {
+          duration: 2000 + Math.random() * 3000,
+          easing: 'cubic-bezier(0.1, 0.8, 0.2, 1)'
+        });
+        
+        animation.onfinish = () => confetti.remove();
+      }
+    }
+
+    // Wheel functionality
+    let spinning = false;
+
+    spinBtn.addEventListener("click", () => {
+      if (spinning || hasSpun) return;
+      spinning = true;
+      hasSpun = true;
+      spinBtn.disabled = true;
+      
+      let rand = Math.floor(Math.random()*wheelSegments.length);
+      let deg = 360*5 + (rand*(360/wheelSegments.length));
+      wheelLogo.style.transform = `translate(-50%, -50%) rotate(${deg}deg)`;
+
+      setTimeout(() => {
+        let bonus = wheelSegments[rand];
+        totalPrize += bonus;
+        message.textContent = `🎊 Final Prize: K${totalPrize} (incl. K${bonus} bonus)`;
+        createConfetti();
+        
+        // Show the winner form modal
+        prizeAmountEl.textContent = totalPrize;
+        winnerModal.style.display = "flex";
+        
+        spinning = false;
+      }, 4000);
+    });
+
+    // Handle winner form submission
+    winnerForm.addEventListener('submit', function(e) {
+      e.preventDefault();
+      
+      const name = document.getElementById('winnerName').value;
+      const phone = document.getElementById('winnerPhone').value;
+      
+      if (name && phone) {
+        const text = `🎉 Buffer Zone Winner! 🎉\nName: ${name}\nPhone: ${phone}\nPrize: K${totalPrize}`;
+        window.open(`https://wa.me/${phoneNumber}?text=${encodeURIComponent(text)}`, "_blank");
+        
+        // Close the modal
+        winnerModal.style.display = "none";
+        
+        // Show success message
+        message.textContent = "✅ Details submitted! Check WhatsApp.";
+        
+        // Reset game for next day
+        setTimeout(() => {
+          homeScreen.style.display = 'block';
+          gameScreen.style.display = 'none';
+        }, 3000);
+      }
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', function(e) {
+      if (e.target === winnerModal) {
+        winnerModal.style.display = "none";
+      }
+    });
+
+    // Initialize the game
+    initializePlayTracking();
+  </script>
+</body>
+</html>
