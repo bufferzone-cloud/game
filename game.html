@@ -5,7 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buffer Zone Bonus Game</title>
   <style>
-    /* CSS remains the same as in the original code */
     * {
       box-sizing: border-box;
       margin: 0;
@@ -522,7 +521,7 @@
         </div>
         
         <div class="prize-highlight">
-          ⚡ 20% chance to find matching cards!
+          ⚡ 3 attempts per day - make them count!
         </div>
         
         <div class="attempts-display" id="attemptsDisplay">Attempts remaining today: 3/3</div>
@@ -759,10 +758,7 @@
 
     function checkMatch() {
       let [c1, c2] = flipped;
-      // 20% chance of finding a match
-      const isMatch = Math.random() < 0.2;
-      
-      if (isMatch) {
+      if (c1.dataset.value === c2.dataset.value) {
         totalPrize = (c1.dataset.value === 'BZ') ? 50 : parseInt(c1.dataset.value);
         message.textContent = `🎉 Congrats! You won K${totalPrize}`;
         createConfetti();
@@ -904,4 +900,5 @@
     initializePlayTracking();
   </script>
 </body>
+
 </html>
