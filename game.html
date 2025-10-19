@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Buffer Zone Bonus Game</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
   <style>
     * {
       box-sizing: border-box;
@@ -26,36 +29,43 @@
     .container {
       text-align: center;
       width: 100%;
-      max-width: 360px;
+      max-width: 380px;
       background: #ffffff;
-      border-radius: 16px;
-      box-shadow: 0 8px 20px rgba(106, 13, 173, 0.15);
-      padding: 15px;
+      border-radius: 20px;
+      box-shadow: 0 10px 25px rgba(106, 13, 173, 0.2);
+      padding: 20px;
       position: relative;
       overflow: hidden;
     }
 
     .header {
-      margin-bottom: 15px;
+      margin-bottom: 20px;
       position: relative;
     }
 
     .logo-container {
-      width: 70px;
-      height: 70px;
-      margin: 0 auto 10px;
+      width: 80px;
+      height: 80px;
+      margin: 0 auto 15px;
       border-radius: 50%;
       display: flex;
       align-items: center;
       justify-content: center;
       background: linear-gradient(135deg, #6a0dad, #8a2be2);
-      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
-      padding: 3px;
+      box-shadow: 0 5px 15px rgba(106, 13, 173, 0.4);
+      padding: 4px;
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.05); }
+      100% { transform: scale(1); }
     }
 
     .logo {
-      width: 64px;
-      height: 64px;
+      width: 72px;
+      height: 72px;
       border-radius: 50%;
       background: white;
       display: flex;
@@ -64,92 +74,99 @@
     }
 
     .logo img {
-      width: 50px;
-      height: 50px;
+      width: 55px;
+      height: 55px;
       border-radius: 50%;
     }
 
     h1 {
-      font-size: 1.4rem;
+      font-size: 1.5rem;
       color: #6a0dad;
-      margin-bottom: 5px;
+      margin-bottom: 8px;
       font-weight: 700;
     }
 
     .subtitle {
       color: #8a2be2;
-      font-size: 0.85rem;
-      margin-bottom: 10px;
+      font-size: 0.9rem;
+      margin-bottom: 12px;
     }
 
     .intro-text {
       color: #555;
-      font-size: 0.8rem;
-      margin-bottom: 15px;
-      line-height: 1.4;
+      font-size: 0.85rem;
+      margin-bottom: 18px;
+      line-height: 1.5;
     }
 
     .prize-highlight {
       background: linear-gradient(135deg, #6a0dad, #8a2be2);
       color: white;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 12px 0;
       font-weight: 600;
-      box-shadow: 0 3px 8px rgba(106, 13, 173, 0.2);
-      font-size: 0.8rem;
+      box-shadow: 0 4px 10px rgba(106, 13, 173, 0.25);
+      font-size: 0.85rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
     }
 
     .attempts-display {
       background: #f8f9fa;
       color: #6a0dad;
-      padding: 8px 12px;
-      border-radius: 8px;
-      margin: 10px 0;
+      padding: 10px 15px;
+      border-radius: 10px;
+      margin: 12px 0;
       font-weight: 600;
       border: 2px solid #e9ecef;
-      font-size: 0.8rem;
+      font-size: 0.85rem;
+      transition: all 0.3s;
+    }
+
+    .attempts-display.low {
+      background: #fff5f5;
+      color: #e53e3e;
+      border-color: #fed7d7;
     }
 
     #gameBoard {
       display: grid;
       grid-template-columns: repeat(4, 1fr);
-      gap: 8px;
-      margin-bottom: 15px;
+      gap: 10px;
+      margin-bottom: 20px;
     }
 
     .card {
       background: #f8f9fa;
-      border-radius: 10px;
-      height: 65px;
+      border-radius: 12px;
+      height: 70px;
       display: flex;
       justify-content: center;
       align-items: center;
       cursor: pointer;
       position: relative;
       perspective: 1000px;
-      box-shadow: 0 3px 6px rgba(106, 13, 173, 0.1);
+      box-shadow: 0 4px 8px rgba(106, 13, 173, 0.15);
       transition: transform 0.3s, box-shadow 0.3s;
       border: 2px solid #e9ecef;
     }
 
     .card:hover {
-      transform: translateY(-3px);
-      box-shadow: 0 5px 10px rgba(106, 13, 173, 0.15);
+      transform: translateY(-5px);
+      box-shadow: 0 8px 15px rgba(106, 13, 173, 0.2);
     }
 
-    .card.flip .front {
+    .card.flip {
       transform: rotateY(180deg);
-    }
-
-    .card.flip .back {
-      transform: rotateY(0deg);
     }
 
     .front, .back {
       width: 100%;
       height: 100%;
-      border-radius: 8px;
+      border-radius: 10px;
       position: absolute;
       top: 0;
       left: 0;
@@ -167,8 +184,8 @@
     }
 
     .front img {
-      width: 40px;
-      height: 40px;
+      width: 45px;
+      height: 45px;
       object-fit: contain;
     }
 
@@ -177,35 +194,35 @@
       transform: rotateY(180deg);
       color: white;
       font-weight: bold;
-      font-size: 1rem;
-      box-shadow: inset 0 0 8px rgba(0, 0, 0, 0.1);
+      font-size: 1.1rem;
+      box-shadow: inset 0 0 10px rgba(0, 0, 0, 0.1);
       flex-direction: column;
-      padding: 3px;
+      padding: 5px;
     }
 
     .back img {
-      width: 30px;
-      height: 30px;
-      margin-bottom: 3px;
+      width: 35px;
+      height: 35px;
+      margin-bottom: 5px;
     }
 
     #pickedWell {
       display: flex;
       justify-content: center;
-      gap: 12px;
-      margin: 15px 0;
+      gap: 15px;
+      margin: 18px 0;
     }
 
     .picked {
       background: #f8f9fa;
       color: #6a0dad;
-      border-radius: 10px;
-      padding: 12px 15px;
-      font-size: 0.9rem;
+      border-radius: 12px;
+      padding: 15px 18px;
+      font-size: 1rem;
       font-weight: bold;
-      min-width: 55px;
+      min-width: 60px;
       text-align: center;
-      box-shadow: 0 3px 8px rgba(106, 13, 173, 0.1);
+      box-shadow: 0 4px 10px rgba(106, 13, 173, 0.15);
       transition: all 0.3s;
       border: 2px solid #e9ecef;
     }
@@ -214,47 +231,53 @@
       transform: scale(1.1);
       background: #6a0dad;
       color: white;
-      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.3);
+      box-shadow: 0 6px 15px rgba(106, 13, 173, 0.35);
     }
 
     #message {
-      margin: 12px 0;
-      font-size: 0.9rem;
-      min-height: 25px;
+      margin: 15px 0;
+      font-size: 0.95rem;
+      min-height: 30px;
       font-weight: 600;
       color: #6a0dad;
     }
 
     #timer {
-      margin: 8px 0;
-      font-size: 0.85rem;
+      margin: 10px 0;
+      font-size: 0.9rem;
       color: #8a2be2;
       font-weight: bold;
       background: #f8f9fa;
-      padding: 6px 12px;
-      border-radius: 16px;
+      padding: 8px 15px;
+      border-radius: 20px;
       display: inline-block;
+      transition: all 0.3s;
+    }
+
+    #timer.warning {
+      background: #fff5f5;
+      color: #e53e3e;
     }
 
     #whatsappBtn {
       display: none;
       background: #25D366;
       border: none;
-      padding: 12px 20px;
+      padding: 14px 25px;
       color: #fff;
-      border-radius: 10px;
-      font-size: 0.9rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       transition: all 0.3s;
-      box-shadow: 0 3px 10px rgba(37, 211, 102, 0.3);
+      box-shadow: 0 4px 12px rgba(37, 211, 102, 0.35);
       width: 100%;
-      margin-top: 12px;
+      margin-top: 15px;
     }
 
     #whatsappBtn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 5px 12px rgba(37, 211, 102, 0.4);
+      box-shadow: 0 6px 15px rgba(37, 211, 102, 0.45);
     }
 
     #whatsappBtn.show {
@@ -278,87 +301,100 @@
 
     .modal-content {
       background: #ffffff;
-      padding: 20px;
-      border-radius: 16px;
+      padding: 25px;
+      border-radius: 20px;
       width: 100%;
-      max-width: 320px;
-      box-shadow: 0 12px 28px rgba(0, 0, 0, 0.2);
+      max-width: 340px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
       text-align: center;
+      animation: modalFadeIn 0.3s ease-out;
+    }
+
+    @keyframes modalFadeIn {
+      from { opacity: 0; transform: translateY(-20px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
     .modal h2 {
       margin-top: 0;
       color: #6a0dad;
-      margin-bottom: 12px;
-      font-size: 1.3rem;
+      margin-bottom: 15px;
+      font-size: 1.4rem;
     }
 
     .form-group {
-      margin-bottom: 15px;
+      margin-bottom: 18px;
       text-align: left;
     }
 
     .form-group label {
       display: block;
-      margin-bottom: 6px;
+      margin-bottom: 8px;
       font-weight: 600;
       color: #6a0dad;
-      font-size: 0.85rem;
+      font-size: 0.9rem;
     }
 
     .form-group input {
       width: 100%;
-      padding: 10px 12px;
-      border-radius: 8px;
+      padding: 12px 15px;
+      border-radius: 10px;
       border: 2px solid #e9ecef;
       box-sizing: border-box;
-      font-size: 0.9rem;
+      font-size: 0.95rem;
       transition: border-color 0.3s;
     }
 
     .form-group input:focus {
       outline: none;
       border-color: #6a0dad;
+      box-shadow: 0 0 0 3px rgba(106, 13, 173, 0.1);
     }
 
     .submit-btn {
       background: linear-gradient(135deg, #6a0dad, #8a2be2);
       border: none;
-      padding: 12px 18px;
+      padding: 14px 20px;
       color: #fff;
-      border-radius: 10px;
-      font-size: 0.9rem;
+      border-radius: 12px;
+      font-size: 0.95rem;
       font-weight: 600;
       cursor: pointer;
       width: 100%;
-      margin-top: 8px;
+      margin-top: 10px;
       transition: all 0.3s;
-      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
+      box-shadow: 0 4px 12px rgba(106, 13, 173, 0.35);
     }
 
     .submit-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.4);
+      box-shadow: 0 6px 15px rgba(106, 13, 173, 0.45);
     }
 
     /* Wheel Section */
     .wheel-container {
-      margin-top: 20px;
+      margin-top: 25px;
       text-align: center;
       display: none;
+      animation: fadeIn 0.5s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
     }
 
     .wheel-title {
       color: #6a0dad;
-      margin-bottom: 12px;
-      font-size: 1.2rem;
+      margin-bottom: 15px;
+      font-size: 1.3rem;
     }
 
     .wheel-wrapper {
       position: relative;
-      width: 200px;
-      height: 200px;
-      margin: 0 auto 15px;
+      width: 220px;
+      height: 220px;
+      margin: 0 auto 20px;
     }
 
     .wheel {
@@ -368,8 +404,8 @@
       position: relative;
       overflow: hidden;
       transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
-      box-shadow: 0 0 15px rgba(106, 13, 173, 0.2);
-      border: 6px solid #6a0dad;
+      box-shadow: 0 0 20px rgba(106, 13, 173, 0.3);
+      border: 8px solid #6a0dad;
       background: linear-gradient(135deg, #6a0dad, #8a2be2);
     }
 
@@ -378,8 +414,8 @@
       top: 50%;
       left: 50%;
       transform: translate(-50%, -50%);
-      width: 120px;
-      height: 120px;
+      width: 130px;
+      height: 130px;
       z-index: 10;
       transition: transform 4s cubic-bezier(0.33, 1, 0.68, 1);
     }
@@ -388,38 +424,38 @@
       width: 100%;
       height: 100%;
       border-radius: 50%;
-      border: 4px solid white;
-      box-shadow: 0 0 20px rgba(0,0,0,0.2);
+      border: 5px solid white;
+      box-shadow: 0 0 25px rgba(0,0,0,0.25);
     }
 
     .wheel-pointer {
       position: absolute;
-      top: -15px;
+      top: -18px;
       left: 50%;
       transform: translateX(-50%);
-      width: 30px;
-      height: 30px;
+      width: 35px;
+      height: 35px;
       z-index: 10;
-      filter: drop-shadow(0 0 4px rgba(0,0,0,0.3));
+      filter: drop-shadow(0 0 5px rgba(0,0,0,0.4));
     }
 
     #spinBtn {
-      margin-top: 8px;
+      margin-top: 10px;
       background: linear-gradient(135deg, #6a0dad, #8a2be2);
       border: none;
-      padding: 12px 20px;
-      font-size: 0.9rem;
+      padding: 14px 25px;
+      font-size: 0.95rem;
       color: #fff;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
+      box-shadow: 0 4px 12px rgba(106, 13, 173, 0.35);
       transition: all 0.3s;
       font-weight: 600;
     }
 
     #spinBtn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.4);
+      box-shadow: 0 6px 15px rgba(106, 13, 173, 0.45);
     }
 
     #spinBtn:disabled {
@@ -431,8 +467,8 @@
 
     .confetti {
       position: fixed;
-      width: 8px;
-      height: 8px;
+      width: 10px;
+      height: 10px;
       background-color: #6a0dad;
       opacity: 0;
       z-index: 1000;
@@ -442,61 +478,92 @@
     .start-btn {
       background: linear-gradient(135deg, #6a0dad, #8a2be2);
       border: none;
-      padding: 14px 25px;
-      font-size: 1rem;
+      padding: 16px 30px;
+      font-size: 1.05rem;
       color: #fff;
-      border-radius: 10px;
+      border-radius: 12px;
       cursor: pointer;
-      box-shadow: 0 3px 10px rgba(106, 13, 173, 0.3);
+      box-shadow: 0 4px 12px rgba(106, 13, 173, 0.35);
       transition: all 0.3s;
       font-weight: 600;
-      margin-top: 15px;
+      margin-top: 18px;
       width: 100%;
     }
 
     .start-btn:hover {
       transform: translateY(-3px);
-      box-shadow: 0 5px 12px rgba(106, 13, 173, 0.4);
+      box-shadow: 0 6px 15px rgba(106, 13, 173, 0.45);
     }
 
     .daily-limit {
       background: #ff6b6b;
       color: white;
-      padding: 12px;
-      border-radius: 10px;
-      margin: 15px 0;
+      padding: 14px;
+      border-radius: 12px;
+      margin: 18px 0;
       font-weight: 600;
-      box-shadow: 0 3px 10px rgba(255, 107, 107, 0.3);
+      box-shadow: 0 4px 12px rgba(255, 107, 107, 0.35);
     }
 
     .play-count {
-      font-size: 0.8rem;
+      font-size: 0.85rem;
       color: #6a0dad;
+      margin: 12px 0;
+      font-weight: 600;
+    }
+
+    .progress-container {
+      width: 100%;
+      height: 8px;
+      background: #e9ecef;
+      border-radius: 4px;
+      margin: 15px 0;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      height: 100%;
+      background: linear-gradient(90deg, #6a0dad, #8a2be2);
+      border-radius: 4px;
+      transition: width 0.5s ease;
+    }
+
+    .streak-display {
+      background: linear-gradient(135deg, #ffd700, #ffa500);
+      color: #333;
+      padding: 8px 12px;
+      border-radius: 8px;
       margin: 10px 0;
       font-weight: 600;
+      box-shadow: 0 3px 8px rgba(255, 215, 0, 0.3);
+      font-size: 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
     }
 
     @media (max-width: 480px) {
       .container {
-        padding: 12px;
+        padding: 15px;
       }
       
       h1 {
-        font-size: 1.3rem;
+        font-size: 1.35rem;
       }
       
       .card {
-        height: 60px;
+        height: 65px;
       }
       
       .wheel-wrapper {
-        width: 180px;
-        height: 180px;
+        width: 200px;
+        height: 200px;
       }
       
       .wheel-logo {
-        width: 100px;
-        height: 100px;
+        width: 115px;
+        height: 115px;
       }
     }
   </style>
@@ -524,7 +591,15 @@
           ⚡ 3 attempts per day - make them count!
         </div>
         
+        <div class="streak-display" id="streakDisplay">
+          🔥 Current Streak: <span id="streakCount">0</span> days
+        </div>
+        
         <div class="attempts-display" id="attemptsDisplay">Attempts remaining today: 3/3</div>
+        
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar" style="width: 100%"></div>
+        </div>
         
         <button class="start-btn" id="startBtn">Start First Attempt</button>
       </div>
@@ -598,6 +673,9 @@
     const attemptsDisplay = document.getElementById('attemptsDisplay');
     const currentAttempt = document.getElementById('currentAttempt');
     const wheelLogo = document.getElementById('wheelLogo');
+    const progressBar = document.getElementById('progressBar');
+    const streakDisplay = document.getElementById('streakDisplay');
+    const streakCount = document.getElementById('streakCount');
 
     const phoneNumber = "+260768658484";
 
@@ -628,6 +706,7 @@
     let attemptsRemaining = 3;
     let currentAttemptNumber = 1;
     let hasPlayedToday = false;
+    let playStreak = 0;
 
     // Wheel segments with hidden values
     const wheelSegments = [0, 5, 10, 15];
@@ -642,36 +721,52 @@
         // Check if data exists and is from today
         if (data && data.lastPlayDate === today) {
           attemptsRemaining = data.attemptsRemaining !== undefined ? data.attemptsRemaining : 3;
+          playStreak = data.playStreak || 0;
         } else {
-          // Reset if it's a new day or data is invalid
+          // Check if it's consecutive day
+          const yesterday = new Date();
+          yesterday.setDate(yesterday.getDate() - 1);
+          if (data && data.lastPlayDate === yesterday.toDateString()) {
+            playStreak = (data.playStreak || 0) + 1;
+          } else {
+            playStreak = 1;
+          }
+          // Reset if it's a new day
           attemptsRemaining = 3;
         }
       } else {
         // No stored data, start with 3 attempts
         attemptsRemaining = 3;
+        playStreak = 1;
       }
       
       updateAttemptsDisplay();
+      updateStreakDisplay();
       checkAttemptsLimit();
     }
 
     function savePlayData() {
       const data = {
         attemptsRemaining: attemptsRemaining,
-        lastPlayDate: new Date().toDateString()
+        lastPlayDate: new Date().toDateString(),
+        playStreak: playStreak
       };
       localStorage.setItem('bufferZoneGameData', JSON.stringify(data));
     }
 
     function updateAttemptsDisplay() {
       attemptsDisplay.textContent = `Attempts remaining today: ${attemptsRemaining}/3`;
+      progressBar.style.width = `${(attemptsRemaining / 3) * 100}%`;
+      
       if (attemptsRemaining === 0) {
-        attemptsDisplay.style.background = "#ff6b6b";
-        attemptsDisplay.style.color = "white";
+        attemptsDisplay.classList.add('low');
       } else {
-        attemptsDisplay.style.background = "#f8f9fa";
-        attemptsDisplay.style.color = "#6a0dad";
+        attemptsDisplay.classList.remove('low');
       }
+    }
+
+    function updateStreakDisplay() {
+      streakCount.textContent = playStreak;
     }
 
     function checkAttemptsLimit() {
@@ -784,9 +879,16 @@
     function startTimer() {
       timer = 20;
       timerEl.textContent = `⏳ 20s to pick cards`;
+      timerEl.classList.remove('warning');
+      
       countdown = setInterval(() => {
         timer--;
         timerEl.textContent = `⏳ ${timer}s left to pick cards`;
+        
+        if (timer <= 5) {
+          timerEl.classList.add('warning');
+        }
+        
         if (timer <= 0) {
           endAttempt();
         }
@@ -816,7 +918,7 @@
 
     function createConfetti() {
       const colors = ['#6a0dad', '#8a2be2', '#9370db', '#ba55d3', '#da70d6', '#d8bfd8'];
-      for (let i = 0; i < 80; i++) {
+      for (let i = 0; i < 100; i++) {
         const confetti = document.createElement('div');
         confetti.classList.add('confetti');
         confetti.style.left = Math.random() * 100 + 'vw';
@@ -900,5 +1002,4 @@
     initializePlayTracking();
   </script>
 </body>
-
 </html>
